@@ -7,6 +7,269 @@
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
+        /* Auth Modal Styles */
+        .auth-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .auth-modal.active {
+            display: flex;
+        }
+
+        .auth-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #eee;
+        }
+
+        .auth-tab {
+            padding: 0.75rem 1.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            color: #666;
+            border-bottom: 3px solid transparent;
+        }
+
+        .auth-tab.active {
+            color: #2c5aa0;
+            border-bottom-color: #2c5aa0;
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus {
+            border-color: #2c5aa0;
+            outline: none;
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: #2c5aa0;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 1rem;
+        }
+
+        .auth-btn:hover {
+            background: #1e3d6f;
+        }
+
+        .auth-links {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .auth-links a {
+            color: #2c5aa0;
+            text-decoration: none;
+        }
+
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* User Menu Styles */
+        .user-menu {
+            display: none;
+            position: relative;
+        }
+
+        .user-menu.active {
+            display: block;
+        }
+
+        .user-welcome {
+            background: #f8f9fa;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            border: 2px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .user-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            min-width: 150px;
+            z-index: 100;
+        }
+
+        .user-dropdown.active {
+            display: block;
+        }
+
+        .user-dropdown a {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: #333;
+            text-decoration: none;
+            border-bottom: 1px solid #eee;
+        }
+
+        .user-dropdown a:hover {
+            background: #f8f9fa;
+        }
+
+        .user-dropdown a:last-child {
+            border-bottom: none;
+        }
+
+        /* Header Auth Styles - Fixed Placement */
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-auth {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-left: auto;
+        }
+
+        .login-btn, .register-btn {
+            padding: 0.5rem 1.5rem;
+            border: 2px solid #2c5aa0;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .login-btn {
+            background: #2c5aa0;
+            color: white;
+        }
+
+        .login-btn:hover {
+            background: #1e3d6f;
+            border-color: #1e3d6f;
+        }
+
+        .register-btn {
+            background: transparent;
+            color: #2c5aa0;
+        }
+
+        .register-btn:hover {
+            background: #2c5aa0;
+            color: white;
+        }
+
+        /* Protected Content Overlay */
+        .protected-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+            text-align: center;
+        }
+
+        .protected-overlay.active {
+            display: flex;
+        }
+
+        .protected-content {
+            background: white;
+            padding: 3rem;
+            border-radius: 10px;
+            color: #333;
+            max-width: 500px;
+            margin: 2rem;
+        }
+
+        .protected-content h2 {
+            color: #2c5aa0;
+            margin-bottom: 1rem;
+        }
+
+        /* Navigation protection */
+        .protected-nav {
+            display: none;
+        }
+
+        .protected-nav.active {
+            display: block;
+        }
+
         /* Payment Modal Styles */
         .payment-modal {
             display: none;
@@ -36,17 +299,6 @@
             overflow-y: auto;
         }
 
-        .close-modal {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #666;
-        }
-
         .payment-tabs {
             display: flex;
             margin-bottom: 1.5rem;
@@ -74,30 +326,6 @@
 
         .payment-form.active {
             display: block;
-        }
-
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: #333;
-        }
-
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 0.75rem;
-            border: 2px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
-        }
-
-        .form-group input:focus, .form-group select:focus {
-            border-color: #2c5aa0;
-            outline: none;
         }
 
         .form-row {
@@ -258,6 +486,27 @@
 
         /* Mobile responsive */
         @media (max-width: 768px) {
+            .header-container {
+                flex-wrap: wrap;
+            }
+
+            .header-auth {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+                margin-top: 1rem;
+            }
+
+            .auth-content {
+                margin: 1rem;
+                width: calc(100% - 2rem);
+            }
+
+            .protected-content {
+                padding: 2rem;
+                margin: 1rem;
+            }
+
             .payment-content {
                 margin: 1rem;
                 width: calc(100% - 2rem);
@@ -278,7 +527,19 @@
         }
     </style>
 </head>
-<body>
+<body class="page-donor">
+    <!-- Protected Content Overlay -->
+    <div class="protected-overlay" id="protectedOverlay">
+        <div class="protected-content">
+            <h2>Please Login to Continue</h2>
+            <p>You need to be logged in to access donor-advised fund information and start a fund. Please login or register for a new account.</p>
+            <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
+                <a href="#" class="login-btn" onclick="openAuthModal('login')">Login</a>
+                <a href="#" class="register-btn" onclick="openAuthModal('register')">Register</a>
+            </div>
+        </div>
+    </div>
+
     <!-- Header -->
     <header>
         <div class="container header-container">
@@ -291,16 +552,99 @@
             <nav>
                 <ul class="nav-menu">
                     <li><a href="index.html">Home</a></li>
-                    <li><a href="about.html">About Us</a></li>
-                    <li><a href="donor-advised-fund.html" class="active">Donor-Advised Fund</a></li>
-                    <li><a href="who-we-help.html">Who We Help</a></li>
-                    <li><a href="resources.html">Resources</a></li>
-                    <li><a href="gallery.html">Gallery</a></li>
-                    <li><a href="contact.html">Contact</a></li>
+                    <li class="protected-nav"><a href="about.html">About Us</a></li>
+                    <li class="protected-nav"><a href="donor-advised-fund.html" class="active">Donor-Advised Fund</a></li>
+                    <li class="protected-nav"><a href="who-we-help.html">Who We Help</a></li>
+                    <li class="protected-nav"><a href="resources.html">Resources</a></li>
+                    <li class="protected-nav"><a href="gallery.html">Gallery</a></li>
+                    <li class="protected-nav"><a href="contact.html">Contact</a></li>
                 </ul>
             </nav>
+
+            <!-- Auth Buttons - Right Corner -->
+            <div class="header-auth">
+                <div class="auth-buttons" id="authButtons">
+                    <a href="#" class="login-btn" onclick="openAuthModal('login')">Login</a>
+                    <a href="#" class="register-btn" onclick="openAuthModal('register')">Register</a>
+                </div>
+                <div class="user-menu" id="userMenu">
+                    <div class="user-welcome" onclick="toggleUserDropdown()">
+                        <span id="userName">User</span> ▼
+                    </div>
+                    <div class="user-dropdown" id="userDropdown">
+                        <a href="#" onclick="showDashboard()">Dashboard</a>
+                        <a href="#" onclick="showProfile()">My Profile</a>
+                        <a href="#" onclick="showDonations()">My Donations</a>
+                        <a href="#" onclick="logout()">Logout</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </header>
+
+    <!-- Auth Modal -->
+    <div class="auth-modal" id="authModal">
+        <div class="auth-content">
+            <button class="close-modal" onclick="closeAuthModal()">×</button>
+            
+            <div class="auth-tabs">
+                <button class="auth-tab active" onclick="switchAuthTab('login')">Login</button>
+                <button class="auth-tab" onclick="switchAuthTab('register')">Register</button>
+            </div>
+
+            <!-- Login Form -->
+            <form class="auth-form active" id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="auth-btn">Login</button>
+                <div class="auth-links">
+                    <a href="#" onclick="switchAuthTab('forgot')">Forgot Password?</a>
+                </div>
+            </form>
+
+            <!-- Register Form -->
+            <form class="auth-form" id="registerForm">
+                <div class="form-group">
+                    <label for="registerName">Full Name</label>
+                    <input type="text" id="registerName" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email</label>
+                    <input type="email" id="registerEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Password</label>
+                    <input type="password" id="registerPassword" required minlength="6">
+                </div>
+                <div class="form-group">
+                    <label for="registerConfirmPassword">Confirm Password</label>
+                    <input type="password" id="registerConfirmPassword" required>
+                </div>
+                <button type="submit" class="auth-btn">Create Account</button>
+            </form>
+
+            <!-- Forgot Password Form -->
+            <form class="auth-form" id="forgotPasswordForm">
+                <div class="form-group">
+                    <label for="forgotEmail">Email</label>
+                    <input type="email" id="forgotEmail" required>
+                </div>
+                <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">
+                    Enter your email address and we'll send you a link to reset your password.
+                </p>
+                <button type="submit" class="auth-btn">Reset Password</button>
+                <div class="auth-links">
+                    <a href="#" onclick="switchAuthTab('login')">Back to Login</a>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- Payment Modal -->
     <div class="payment-modal" id="paymentModal">
@@ -529,8 +873,8 @@
         <div class="container">
             <h2>Start Your Fund Today</h2>
             <p>Ready to create lasting change through strategic giving? Establish your donor-advised fund with Tree of Life Foundation and begin your philanthropic journey.</p>
-            <a href="#" class="btn" onclick="openPaymentModal('onetime')">Start a Fund</a>
-            <a href="contact.html" class="btn btn-outline">Contact Us</a>
+            <a href="#" class="btn" onclick="checkAuthAndOpenPayment()">Start a Fund</a>
+            <a href="#" class="btn btn-outline" onclick="checkAuth('contact.html')">Contact Us</a>
         </div>
     </section>
 
@@ -547,11 +891,11 @@
                     <h3>Quick Links</h3>
                     <ul class="footer-links">
                         <li><a href="index.html">Home</a></li>
-                        <li><a href="about.html">About Us</a></li>
-                        <li><a href="donor-advised-fund.html">Donor-Advised Fund</a></li>
-                        <li><a href="who-we-help.html">Who We Help</a></li>
-                        <li><a href="resources.html">Resources</a></li>
-                        <li><a href="gallery.html">Gallery</a></li>
+                        <li><a href="#" onclick="checkAuth('about.html')">About Us</a></li>
+                        <li><a href="#" onclick="checkAuth('donor-advised-fund.html')">Donor-Advised Fund</a></li>
+                        <li><a href="#" onclick="checkAuth('who-we-help.html')">Who We Help</a></li>
+                        <li><a href="#" onclick="checkAuth('resources.html')">Resources</a></li>
+                        <li><a href="#" onclick="checkAuth('gallery.html')">Gallery</a></li>
                     </ul>
                 </div>
                 
@@ -576,6 +920,170 @@
         let selectedAmount = 1000;
         let selectedMonthlyAmount = 100;
         let selectedPaymentMethod = '';
+
+        // Auth functionality
+        function openAuthModal(tab) {
+            document.getElementById('authModal').classList.add('active');
+            switchAuthTab(tab);
+        }
+
+        function closeAuthModal() {
+            document.getElementById('authModal').classList.remove('active');
+        }
+
+        function switchAuthTab(tab) {
+            // Update tabs
+            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+            document.querySelector(`.auth-tab[onclick="switchAuthTab('${tab}')"]`).classList.add('active');
+            
+            // Update forms
+            document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+            document.getElementById(tab + 'Form').classList.add('active');
+        }
+
+        function toggleUserDropdown() {
+            document.getElementById('userDropdown').classList.toggle('active');
+        }
+
+        function logout() {
+            // Hide user menu, show auth buttons
+            document.getElementById('userMenu').classList.remove('active');
+            document.getElementById('authButtons').style.display = 'flex';
+            
+            // Close dropdown
+            document.getElementById('userDropdown').classList.remove('active');
+            
+            // Hide protected content
+            document.querySelectorAll('.protected-nav').forEach(nav => nav.classList.remove('active'));
+            
+            // Clear any stored data
+            localStorage.removeItem('userLoggedIn');
+            localStorage.removeItem('userName');
+            
+            alert('You have been logged out.');
+        }
+
+        function checkAuth(page) {
+            if (localStorage.getItem('userLoggedIn') === 'true') {
+                // User is logged in, allow access
+                if (page) {
+                    window.location.href = page;
+                }
+            } else {
+                // User not logged in, show overlay
+                document.getElementById('protectedOverlay').classList.add('active');
+            }
+        }
+
+        function checkAuthAndOpenPayment() {
+            if (localStorage.getItem('userLoggedIn') === 'true') {
+                openPaymentModal('onetime');
+            } else {
+                document.getElementById('protectedOverlay').classList.add('active');
+            }
+        }
+
+        function showDashboard() {
+            alert('Dashboard page would show user statistics and account info.');
+        }
+
+        function showProfile() {
+            alert('Profile page would allow editing user information.');
+        }
+
+        function showDonations() {
+            alert('Donations page would show donation history and receipts.');
+        }
+
+        // Form submissions
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Simple validation - in real app, you'd call your backend
+            if (email && password) {
+                // Simulate successful login
+                localStorage.setItem('userLoggedIn', 'true');
+                localStorage.setItem('userName', email.split('@')[0]);
+                
+                // Update UI
+                document.getElementById('userName').textContent = email.split('@')[0];
+                document.getElementById('authButtons').style.display = 'none';
+                document.getElementById('userMenu').classList.add('active');
+                document.querySelectorAll('.protected-nav').forEach(nav => nav.classList.add('active'));
+                document.getElementById('protectedOverlay').classList.remove('active');
+                
+                closeAuthModal();
+                alert('Login successful! Welcome back!');
+            }
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                alert('Passwords do not match!');
+                return;
+            }
+            
+            if (name && email && password) {
+                // Simulate successful registration
+                localStorage.setItem('userLoggedIn', 'true');
+                localStorage.setItem('userName', name);
+                
+                // Update UI
+                document.getElementById('userName').textContent = name;
+                document.getElementById('authButtons').style.display = 'none';
+                document.getElementById('userMenu').classList.add('active');
+                document.querySelectorAll('.protected-nav').forEach(nav => nav.classList.add('active'));
+                document.getElementById('protectedOverlay').classList.remove('active');
+                
+                closeAuthModal();
+                alert('Registration successful! Welcome to Tree of Life Foundation!');
+            }
+        });
+
+        document.getElementById('forgotPasswordForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('forgotEmail').value;
+            
+            if (email) {
+                closeAuthModal();
+                alert('Password reset link sent to ' + email);
+            }
+        });
+
+        // Check if user is already logged in
+        document.addEventListener('DOMContentLoaded', function() {
+            if (localStorage.getItem('userLoggedIn') === 'true') {
+                document.getElementById('userName').textContent = localStorage.getItem('userName') || 'User';
+                document.getElementById('authButtons').style.display = 'none';
+                document.getElementById('userMenu').classList.add('active');
+                document.querySelectorAll('.protected-nav').forEach(nav => nav.classList.add('active'));
+            } else {
+                // Show protected overlay if not logged in
+                document.getElementById('protectedOverlay').classList.add('active');
+            }
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.user-menu')) {
+                document.getElementById('userDropdown').classList.remove('active');
+            }
+        });
+
+        // Close protected overlay when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('protected-overlay')) {
+                document.getElementById('protectedOverlay').classList.remove('active');
+            }
+        });
 
         // Payment Modal Functions
         function openPaymentModal(tab) {
@@ -667,7 +1175,7 @@
             }
         }
 
-        // Event Listeners
+        // Payment Event Listeners
         document.addEventListener('DOMContentLoaded', function() {
             // Amount selection
             document.querySelectorAll('#onetimeForm .amount-option').forEach(option => {
@@ -754,12 +1262,6 @@
                 document.getElementById('processingSpinner').classList.remove('active');
                 document.getElementById('onetimeForm').style.display = 'none';
                 document.getElementById('successMessage').classList.add('active');
-                
-                // In a real application, you would integrate with a payment gateway like:
-                // - Stripe
-                // - PayPal
-                // - Square
-                // - Authorize.net
             }, 3000);
         }
 
@@ -784,13 +1286,12 @@
             }, 3000);
         }
 
-        // Close modal when clicking outside
+        // Close payment modal when clicking outside
         document.addEventListener('click', function(e) {
             if (e.target.classList.contains('payment-modal')) {
                 closePaymentModal();
             }
         });
     </script>
-    <body class="page-donor">
 </body>
 </html>

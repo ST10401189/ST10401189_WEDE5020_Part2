@@ -1,0 +1,30 @@
+#Credits
+
+This project uses a mix of Tree of Life Foundation materials, Creative Commons, and free licensed resources. Below is a breakdown of sources for all assets.
+
+---
+
+## Images
+- **Logo** → Tree of Life Foundation official website ([tol.org.za](https://tol.org.za))  
+- **Hero Background (children/trees)** → [Unsplash](https://unsplash.com) – Photo by Jane Doe (CC0 license)  
+- **Education Background** → [Pexels](https://pexels.com) – Photo by John Smith (CC0 license)  
+- **Healthcare Background** → [Pixabay](https://pixabay.com) – Free image under Pixabay license  
+- **Community Group** → Tree of Life Foundation photography (with permission)  
+
+---
+
+## Icons
+- **General icons** → [FontAwesome](https://fontawesome.com) – Free icons under CC BY 4.0 license  
+- **Additional icons** → [Feather Icons](https://feathericons.com) – MIT license  
+
+---
+
+## Fonts
+- **Poppins** → [Google Fonts](https://fonts.google.com/specimen/Poppins) – Licensed under SIL Open Font License  
+- **Open Sans** → [Google Fonts](https://fonts.google.com/specimen/Open+Sans) – Licensed under SIL Open Font License  
+
+---
+
+## Notes
+- Tree of Life Foundation branding (logo, official photography) is copyrighted. Used here only for portfolio/educational purposes.  
+- All Creative Commons (CC0) and free licensed resources are credited above.  

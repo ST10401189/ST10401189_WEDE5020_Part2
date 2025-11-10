@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery - Tree of Life Foundation</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <a href="index.html"><img src="1logo-TOL.png.png" alt="Tree of Life Foundation Logo"></a>
+            </div>
+            
+            <button class="mobile-menu-btn">☰</button>
+            
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="donor-advised-fund.html">Donor-Advised Fund</a></li>
+                    <li><a href="who-we-help.html">Who We Help</a></li>
+                    <li><a href="resources.html">Resources</a></li>
+                    <li><a href="gallery.html" class="active">Gallery</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content">
+            <h1>Our Gallery</h1>
+            <p>Visual stories of impact, transformation, and hope from our projects around the world</p>
+        </div>
+    </section>
+
+    <!-- Gallery Filters -->
+    <section class="mission">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Work in Action</h2>
+                <p>Filter by category to explore specific initiatives</p>
+            </div>
+            
+            <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;">
+                <button class="btn btn-outline filter-btn active" data-filter="all">All Projects</button>
+                <button class="btn btn-outline filter-btn" data-filter="education">Education</button>
+                <button class="btn btn-outline filter-btn" data-filter="healthcare">Healthcare</button>
+                <button class="btn btn-outline filter-btn" data-filter="community">Community</button>
+                <button class="btn btn-outline filter-btn" data-filter="water">Clean Water</button>
+            </div>
+            
+            <div class="gallery-grid">
+                <div class="gallery-item" data-category="education">
+                    <img src="school-construction.jpg" alt="School Construction">
+                    <div class="gallery-item-overlay">
+                        <h3>School Construction</h3>
+                        <p>Building new schools in remote areas</p>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" data-category="education">
+                    <img src="scholarship program.JPG" alt="Scholarship Program">
+                    <div class="gallery-item-overlay">
+                        <h3>Scholarship Program</h3>
+                        <p>Supporting students to pursue higher education</p>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" data-category="healthcare">
+                    <img src="Mobile-clinic.JPG" alt="Mobile Medical Clinic">
+                    <div class="gallery-item-overlay">
+                        <h3>Mobile Medical Clinic</h3>
+                        <p>Bringing healthcare to remote communities</p>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" data-category="healthcare">
+                    <img src="vaccination-campaign.JPG" alt="Vaccination Campaign">
+                    <div class="gallery-item-overlay">
+                        <h3>Vaccination Campaign</h3>
+                        <p>Protecting children from preventable diseases</p>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" data-category="community">
+                    <img src="womenInEntp.JPG" alt="Women's Entrepreneurship">
+                    <div class="gallery-item-overlay">
+                        <h3>Women's Entrepreneurship</h3>
+                        <p>Supporting women-owned businesse</p>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" data-category="community">
+                    <img src="agricultural-training.JPG" alt="Agricultural Training">
+                    <div class="gallery-item-overlay">
+                        <h3>Agricultural Training</h3>
+                        <p>Teaching sustainable farming techniques</p>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" data-category="water">
+                    <img src="well-construction.jpg" alt="Well Construction">
+                    <div class="gallery-item-overlay">
+                        <h3>Well Construction</h3>
+                        <p>Providing clean water access in drought-prone regions</p>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" data-category="water">
+                    <img src="water-purification.jpg" alt="Water Purification">
+                    <div class="gallery-item-overlay">
+                        <h3>Water Purification</h3>
+                        <p>Installing water purification systems in schools</p>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" data-category="education">
+                    <img src="Digital learning.jpg" alt="Digital Learning">
+                    <div class="gallery-item-overlay">
+                        <h3>Digital Learning</h3>
+                        <p>Introducing technology to classrooms</p>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" data-category="healthcare">
+                    <img src="mental-health.jpg" alt="Maternal Health">
+                    <div class="gallery-item-overlay">
+                        <h3>Maternal Health</h3>
+                        <p>Providing prenatal and postnatal care</p>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" data-category="community">
+                    <img src="community-centre.JPG" alt="Community Center">
+                    <div class="gallery-item-overlay">
+                        <h3>Community Center</h3>
+                        <p>Building spaces for community gatherings and events</p>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" data-category="water">
+                    <img src="sanitation-facilities.jpg" alt="Sanitation Facilities">
+                    <div class="gallery-item-overlay">
+                        <h3>Sanitation Facilities</h3>
+                        <p>Constructing toilets and sanitation facilities</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <h2>Be Part of the Story</h2>
+            <p>Your support can help create more stories of transformation and hope in communities around the world.</p>
+            <a href="donor-advised-fund.html" class="btn">Support Our Work</a>
+            <a href="contact.html" class="btn btn-outline">Contact Us</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Tree of Life Foundation</h3>
+                    <p>Where Your Giving Does Good-For Longer.</p>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="donor-advised-fund.html">Donor-Advised Fund</a></li>
+                        <li><a href="who-we-help.html">Who We Help</a></li>
+                        <li><a href="resources.html">Resources</a></li>
+                        <li><a href="gallery.html">Gallery</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Contact Us</h3>
+                    <ul class="footer-links">
+                        <li>Email: info@treeoflifefoundation.org</li>
+                        <li>Phone: +27 (10) 123-4567</li>
+                        <li>Address: Unit F12 Willowbridge Centre, 39 Carl Cronje Dr, Tygervalley, 7530</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2023 Tree of Life Foundation. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script>
+        // Gallery filtering functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    const filter = this.getAttribute('data-filter');
+                    
+                    galleryItems.forEach(item => {
+                        if (filter === 'all' || item.getAttribute('data-category') === filter) {
+                            item.style.display = 'block';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+    <body class="page-gallery">
+</body>
+</html>

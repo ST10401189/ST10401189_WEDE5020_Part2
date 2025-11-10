@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donor-Advised Fund - Tree of Life Foundation</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Payment Modal Styles */
+        .payment-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .payment-modal.active {
+            display: flex;
+        }
+
+        .payment-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .payment-tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #eee;
+        }
+
+        .payment-tab {
+            padding: 0.75rem 1.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            color: #666;
+            border-bottom: 3px solid transparent;
+        }
+
+        .payment-tab.active {
+            color: #2c5aa0;
+            border-bottom-color: #2c5aa0;
+        }
+
+        .payment-form {
+            display: none;
+        }
+
+        .payment-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: #2c5aa0;
+            outline: none;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .payment-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: #2c5aa0;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        .payment-btn:hover {
+            background: #1e3d6f;
+        }
+
+        .payment-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .amount-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .amount-option {
+            padding: 0.75rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .amount-option:hover {
+            border-color: #2c5aa0;
+        }
+
+        .amount-option.selected {
+            background: #2c5aa0;
+            color: white;
+            border-color: #2c5aa0;
+        }
+
+        .custom-amount {
+            margin-top: 1rem;
+        }
+
+        .payment-methods {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .payment-method {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .payment-method:hover {
+            border-color: #2c5aa0;
+        }
+
+        .payment-method.selected {
+            background: #2c5aa0;
+            color: white;
+            border-color: #2c5aa0;
+        }
+
+        .payment-method-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .security-notice {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-top: 1rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .ssl-badge {
+            display: inline-block;
+            background: #28a745;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+        }
+
+        .processing-spinner {
+            display: none;
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .processing-spinner.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #2c5aa0;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Success Message */
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .success-message.active {
+            display: block;
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            color: #28a745;
+            margin-bottom: 1rem;
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .payment-content {
+                margin: 1rem;
+                width: calc(100% - 2rem);
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .amount-options {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .payment-methods {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <a href="index.html"><img src="1logo-TOL.png.png" alt="Tree of Life Foundation Logo"></a>
+            </div>
+            
+            <button class="mobile-menu-btn">☰</button>
+            
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="donor-advised-fund.html" class="active">Donor-Advised Fund</a></li>
+                    <li><a href="who-we-help.html">Who We Help</a></li>
+                    <li><a href="resources.html">Resources</a></li>
+                    <li><a href="gallery.html">Gallery</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Payment Modal -->
+    <div class="payment-modal" id="paymentModal">
+        <div class="payment-content">
+            <button class="close-modal" onclick="closePaymentModal()">×</button>
+            
+            <div class="payment-tabs">
+                <button class="payment-tab active" onclick="switchPaymentTab('onetime')">One-Time Fund</button>
+                <button class="payment-tab" onclick="switchPaymentTab('monthly')">Monthly Fund</button>
+            </div>
+
+            <!-- One-Time Payment Form -->
+            <form class="payment-form active" id="onetimeForm">
+                <h3 style="margin-bottom: 1.5rem; color: #2c5aa0;">Start Your Donor-Advised Fund</h3>
+                
+                <div class="form-group">
+                    <label>Select Amount (USD)</label>
+                    <div class="amount-options">
+                        <div class="amount-option" data-amount="1000">$1,000</div>
+                        <div class="amount-option" data-amount="2500">$2,500</div>
+                        <div class="amount-option" data-amount="5000">$5,000</div>
+                        <div class="amount-option" data-amount="10000">$10,000</div>
+                        <div class="amount-option" data-amount="25000">$25,000</div>
+                        <div class="amount-option" data-amount="50000">$50,000</div>
+                    </div>
+                    <div class="custom-amount">
+                        <input type="number" id="customAmount" placeholder="Enter custom amount" min="100">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="donorName">Full Name</label>
+                    <input type="text" id="donorName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="donorEmail">Email Address</label>
+                    <input type="email" id="donorEmail" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Payment Method</label>
+                    <div class="payment-methods">
+                        <div class="payment-method" data-method="card">
+                            <div class="payment-method-icon">💳</div>
+                            <div>Credit Card</div>
+                        </div>
+                        <div class="payment-method" data-method="paypal">
+                            <div class="payment-method-icon">🔵</div>
+                            <div>PayPal</div>
+                        </div>
+                        <div class="payment-method" data-method="bank">
+                            <div class="payment-method-icon">🏦</div>
+                            <div>Bank Transfer</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Credit Card Details -->
+                <div id="cardDetails" style="display: none;">
+                    <div class="form-group">
+                        <label for="cardNumber">Card Number</label>
+                        <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="expiryDate">Expiry Date</label>
+                            <input type="text" id="expiryDate" placeholder="MM/YY" maxlength="5">
+                        </div>
+                        <div class="form-group">
+                            <label for="cvv">CVV</label>
+                            <input type="text" id="cvv" placeholder="123" maxlength="4">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="security-notice">
+                    <span class="ssl-badge">SSL</span> Secure encrypted payment processing
+                </div>
+
+                <div class="processing-spinner" id="processingSpinner">
+                    <div class="spinner"></div>
+                    <p>Processing your donation...</p>
+                </div>
+
+                <button type="submit" class="payment-btn" id="submitPayment">Start Fund - $1,000</button>
+            </form>
+
+            <!-- Monthly Payment Form -->
+            <form class="payment-form" id="monthlyForm">
+                <h3 style="margin-bottom: 1.5rem; color: #2c5aa0;">Start Monthly Donor Fund</h3>
+                
+                <div class="form-group">
+                    <label>Monthly Amount (USD)</label>
+                    <div class="amount-options">
+                        <div class="amount-option" data-amount="100">$100</div>
+                        <div class="amount-option" data-amount="250">$250</div>
+                        <div class="amount-option" data-amount="500">$500</div>
+                        <div class="amount-option" data-amount="1000">$1,000</div>
+                        <div class="amount-option" data-amount="2500">$2,500</div>
+                        <div class="amount-option" data-amount="5000">$5,000</div>
+                    </div>
+                    <div class="custom-amount">
+                        <input type="number" id="monthlyCustomAmount" placeholder="Enter custom monthly amount" min="10">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="monthlyDonorName">Full Name</label>
+                    <input type="text" id="monthlyDonorName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="monthlyDonorEmail">Email Address</label>
+                    <input type="email" id="monthlyDonorEmail" required>
+                </div>
+
+                <div class="security-notice">
+                    <span class="ssl-badge">SSL</span> Secure encrypted payment processing
+                </div>
+
+                <div class="processing-spinner" id="monthlyProcessingSpinner">
+                    <div class="spinner"></div>
+                    <p>Setting up monthly donations...</p>
+                </div>
+
+                <button type="submit" class="payment-btn" id="submitMonthlyPayment">Start Monthly Fund - $100/month</button>
+            </form>
+
+            <!-- Success Message -->
+            <div class="success-message" id="successMessage">
+                <div class="success-icon">✓</div>
+                <h3>Thank You!</h3>
+                <p>Your donor-advised fund has been successfully created.</p>
+                <p>A confirmation email has been sent to your email address with all the details.</p>
+                <button class="payment-btn" onclick="closePaymentModal()" style="margin-top: 1rem;">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content">
+            <h1>Donor-Advised Funds</h1>
+            <p>A simple, strategic way to manage your charitable giving and maximize your impact</p>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="mission">
+        <div class="container">
+            <div class="section-title">
+                <h2>How It Works</h2>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <span style="font-size: 2.5rem;">1</span>
+                    </div>
+                    <h3>Make a Contribution</h3>
+                    <p>Make a tax-deductible donation to establish your donor-advised fund. You can contribute cash, securities, or other assets.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <span style="font-size: 2.5rem;">2</span>
+                    </div>
+                    <h3>Receive Immediate Tax Benefits</h3>
+                    <p>Get an immediate tax deduction for your contribution, then recommend grants to charities over time.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <span style="font-size: 2.5rem;">3</span>
+                    </div>
+                    <h3>Recommend Grants</h3>
+                    <p>Recommend grants to qualified charities whenever you're ready. Our team handles all the paperwork.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Benefits of a Donor-Advised Fund</h2>
+            </div>
+            
+            <div class="mission-content">
+                <div class="mission-text">
+                    <ul style="list-style: none;">
+                        <li style="margin-bottom: 1.5rem; padding-left: 2rem; position: relative;">
+                            <span style="position: absolute; left: 0; color: var(--primary-color); font-weight: bold;">✓</span>
+                            <h4>Tax Advantages</h4>
+                            <p>Receive an immediate tax deduction for contributions to your fund, while supporting charities over time.</p>
+                        </li>
+                        <li style="margin-bottom: 1.5rem; padding-left: 2rem; position: relative;">
+                            <span style="position: absolute; left: 0; color: var(--primary-color); font-weight: bold;">✓</span>
+                            <h4>Simplified Giving</h4>
+                            <p>Consolidate your charitable giving with one tax receipt and one streamlined process.</p>
+                        </li>
+                        <li style="margin-bottom: 1.5rem; padding-left: 2rem; position: relative;">
+                            <span style="position: absolute; left: 0; color: var(--primary-color); font-weight: bold;">✓</span>
+                            <h4>Strategic Impact</h4>
+                            <p>Take time to research charities and make informed giving decisions that align with your values.</p>
+                        </li>
+                        <li style="margin-bottom: 1.5rem; padding-left: 2rem; position: relative;">
+                            <span style="position: absolute; left: 0; color: var(--primary-color); font-weight: bold;">✓</span>
+                            <h4>Family Involvement</h4>
+                            <p>Engage your family in charitable giving and create a legacy of philanthropy.</p>
+                        </li>
+                    </ul>
+                </div>
+                <div class="mission-image">
+                    <img src="MakeAChange.jpg" alt="Donor-Advised Fund Benefits">
+                </div>
+            </div>
+        </div>
+    </section>
+    
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <h2>Start Your Fund Today</h2>
+            <p>Ready to create lasting change through strategic giving? Establish your donor-advised fund with Tree of Life Foundation and begin your philanthropic journey.</p>
+            <a href="#" class="btn" onclick="openPaymentModal('onetime')">Start a Fund</a>
+            <a href="contact.html" class="btn btn-outline">Contact Us</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Tree of Life Foundation</h3>
+                    <p>Where Your Giving Does Good-For Longer.</p>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="donor-advised-fund.html">Donor-Advised Fund</a></li>
+                        <li><a href="who-we-help.html">Who We Help</a></li>
+                        <li><a href="resources.html">Resources</a></li>
+                        <li><a href="gallery.html">Gallery</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Contact Us</h3>
+                    <ul class="footer-links">
+                        <li>Email: info@treeoflifefoundation.org</li>
+                        <li>Phone: +27 (10) 123-4567</li>
+                        <li>Address: Unit F12 Willowbridge Centre, 39 Carl Cronje Dr, Tygervalley, 7530</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2023 Tree of Life Foundation. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script>
+        let selectedAmount = 1000;
+        let selectedMonthlyAmount = 100;
+        let selectedPaymentMethod = '';
+
+        // Payment Modal Functions
+        function openPaymentModal(tab) {
+            document.getElementById('paymentModal').classList.add('active');
+            switchPaymentTab(tab);
+        }
+
+        function closePaymentModal() {
+            document.getElementById('paymentModal').classList.remove('active');
+            resetForms();
+        }
+
+        function switchPaymentTab(tab) {
+            // Update tabs
+            document.querySelectorAll('.payment-tab').forEach(t => t.classList.remove('active'));
+            document.querySelector(`.payment-tab[onclick="switchPaymentTab('${tab}')"]`).classList.add('active');
+            
+            // Update forms
+            document.querySelectorAll('.payment-form').forEach(f => f.classList.remove('active'));
+            document.getElementById(tab + 'Form').classList.add('active');
+        }
+
+        function resetForms() {
+            // Reset one-time form
+            selectedAmount = 1000;
+            selectedPaymentMethod = '';
+            updateAmountButtons();
+            updatePaymentMethodButtons();
+            document.getElementById('cardDetails').style.display = 'none';
+            document.getElementById('customAmount').value = '';
+            document.getElementById('donorName').value = '';
+            document.getElementById('donorEmail').value = '';
+            document.getElementById('cardNumber').value = '';
+            document.getElementById('expiryDate').value = '';
+            document.getElementById('cvv').value = '';
+            
+            // Reset monthly form
+            selectedMonthlyAmount = 100;
+            document.getElementById('monthlyCustomAmount').value = '';
+            document.getElementById('monthlyDonorName').value = '';
+            document.getElementById('monthlyDonorEmail').value = '';
+            
+            // Hide success message and spinners
+            document.getElementById('successMessage').classList.remove('active');
+            document.getElementById('processingSpinner').classList.remove('active');
+            document.getElementById('monthlyProcessingSpinner').classList.remove('active');
+        }
+
+        // Amount Selection
+        function updateAmountButtons() {
+            // One-time amounts
+            document.querySelectorAll('#onetimeForm .amount-option').forEach(option => {
+                const amount = parseInt(option.getAttribute('data-amount'));
+                if (amount === selectedAmount) {
+                    option.classList.add('selected');
+                } else {
+                    option.classList.remove('selected');
+                }
+            });
+            document.getElementById('submitPayment').textContent = `Start Fund - $${selectedAmount.toLocaleString()}`;
+
+            // Monthly amounts
+            document.querySelectorAll('#monthlyForm .amount-option').forEach(option => {
+                const amount = parseInt(option.getAttribute('data-amount'));
+                if (amount === selectedMonthlyAmount) {
+                    option.classList.add('selected');
+                } else {
+                    option.classList.remove('selected');
+                }
+            });
+            document.getElementById('submitMonthlyPayment').textContent = `Start Monthly Fund - $${selectedMonthlyAmount.toLocaleString()}/month`;
+        }
+
+        // Payment Method Selection
+        function updatePaymentMethodButtons() {
+            document.querySelectorAll('.payment-method').forEach(method => {
+                if (method.getAttribute('data-method') === selectedPaymentMethod) {
+                    method.classList.add('selected');
+                } else {
+                    method.classList.remove('selected');
+                }
+            });
+
+            // Show/hide card details
+            if (selectedPaymentMethod === 'card') {
+                document.getElementById('cardDetails').style.display = 'block';
+            } else {
+                document.getElementById('cardDetails').style.display = 'none';
+            }
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Amount selection
+            document.querySelectorAll('#onetimeForm .amount-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    selectedAmount = parseInt(this.getAttribute('data-amount'));
+                    document.getElementById('customAmount').value = '';
+                    updateAmountButtons();
+                });
+            });
+
+            document.querySelectorAll('#monthlyForm .amount-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    selectedMonthlyAmount = parseInt(this.getAttribute('data-amount'));
+                    document.getElementById('monthlyCustomAmount').value = '';
+                    updateAmountButtons();
+                });
+            });
+
+            // Custom amount input
+            document.getElementById('customAmount').addEventListener('input', function() {
+                if (this.value) {
+                    selectedAmount = parseInt(this.value) || 0;
+                    updateAmountButtons();
+                }
+            });
+
+            document.getElementById('monthlyCustomAmount').addEventListener('input', function() {
+                if (this.value) {
+                    selectedMonthlyAmount = parseInt(this.value) || 0;
+                    updateAmountButtons();
+                }
+            });
+
+            // Payment method selection
+            document.querySelectorAll('.payment-method').forEach(method => {
+                method.addEventListener('click', function() {
+                    selectedPaymentMethod = this.getAttribute('data-method');
+                    updatePaymentMethodButtons();
+                });
+            });
+
+            // Form submissions
+            document.getElementById('onetimeForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                processOneTimePayment();
+            });
+
+            document.getElementById('monthlyForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                processMonthlyPayment();
+            });
+
+            // Initialize
+            updateAmountButtons();
+        });
+
+        // Payment Processing
+        function processOneTimePayment() {
+            const name = document.getElementById('donorName').value;
+            const email = document.getElementById('donorEmail').value;
+            
+            if (!name || !email) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            if (selectedPaymentMethod === 'card') {
+                const cardNumber = document.getElementById('cardNumber').value;
+                const expiryDate = document.getElementById('expiryDate').value;
+                const cvv = document.getElementById('cvv').value;
+                
+                if (!cardNumber || !expiryDate || !cvv) {
+                    alert('Please fill in all card details.');
+                    return;
+                }
+            }
+
+            // Show processing spinner
+            document.getElementById('processingSpinner').classList.add('active');
+            document.getElementById('submitPayment').disabled = true;
+
+            // Simulate payment processing
+            setTimeout(() => {
+                document.getElementById('processingSpinner').classList.remove('active');
+                document.getElementById('onetimeForm').style.display = 'none';
+                document.getElementById('successMessage').classList.add('active');
+                
+                // In a real application, you would integrate with a payment gateway like:
+                // - Stripe
+                // - PayPal
+                // - Square
+                // - Authorize.net
+            }, 3000);
+        }
+
+        function processMonthlyPayment() {
+            const name = document.getElementById('monthlyDonorName').value;
+            const email = document.getElementById('monthlyDonorEmail').value;
+            
+            if (!name || !email) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            // Show processing spinner
+            document.getElementById('monthlyProcessingSpinner').classList.add('active');
+            document.getElementById('submitMonthlyPayment').disabled = true;
+
+            // Simulate payment processing
+            setTimeout(() => {
+                document.getElementById('monthlyProcessingSpinner').classList.remove('active');
+                document.getElementById('monthlyForm').style.display = 'none';
+                document.getElementById('successMessage').classList.add('active');
+            }, 3000);
+        }
+
+        // Close modal when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('payment-modal')) {
+                closePaymentModal();
+            }
+        });
+    </script>
+    <body class="page-donor">
+</body>
+</html>
